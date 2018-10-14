@@ -1,0 +1,54 @@
+@import 'src/styles/utils';
+
+.editor-pane{
+  display: flex;
+  flex:1;
+  flex-direction: column;
+
+  .title{
+    background: #ffefd4;
+    border: none;
+    outline: none;
+    font-size: 1.5rem;
+    padding: 1rem;
+    color: $oc-gray-8;
+    font-weight: 400;
+    &::placeholder{
+      color: rgb(141, 141, 141);
+    }
+  }
+
+  .code-editor{
+    flex:1;
+    background: rgb(255, 255, 255);
+    
+  }
+
+  .tags{
+    padding-left: 1rem;
+    padding-right: 1rem;
+    height: 2.5rem;
+    background: $oc-gray-1;
+    display: flex;
+    align-items: center;
+
+    .description{
+      font-size: 1.2rem;
+      color: $oc-gray-7;
+      font-weight: 500;
+      margin-right: 1.2rem;
+    }
+    input{
+      font-size: 1rem;
+      border: none;
+      flex: 1;
+      background: none;
+      outline:none;
+      font-weight: 500;
+      color: $oc-gray-8;
+      &::placeholder{
+        color: $oc-gray-5;
+      }
+    }
+  }
+}

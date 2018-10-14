@@ -1,0 +1,17 @@
+@import 'src/styles/utils';
+
+.preview-pane{
+  flex:1;
+  padding: 2rem;
+  padding-top: 0.5rem;
+  overflow-y: auto;
+  font-size: 1.2rem;
+  
+  .title{
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding-bottom: 1.3rem;
+    border-bottom: 1px solid $oc-gray-4;
+  }
+
+}
