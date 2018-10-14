@@ -19,7 +19,7 @@
       position: absolute;
       transform: translate(-50%);
       cursor: col-resize;
-      background:black;
+      background: #ffffff00;
     }
     @include media("<medium") {
       .editor {
