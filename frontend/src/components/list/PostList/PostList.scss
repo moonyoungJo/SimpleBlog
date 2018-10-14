@@ -1,0 +1,53 @@
+@import 'src/styles/utils';
+
+.post-list{
+  .post-item{
+    padding: 1.5rem;
+    transition: all .15s ease-in;
+
+    h2{
+      font-size: 2rem;
+      font-weight: 500;
+      margin: 0;
+      color: $oc-gray-8;
+      a {
+        transition: all .15s ease-in;
+        border-bottom: 1px solid transparent;
+      }
+      a:hover{
+        color: #DD5E89;
+        border-bottom: 1px solid #DD5E89;
+      }
+    }
+    .date{
+      font-size: 0.7rem;
+      color: $oc-gray-6;
+    }
+    p{
+      font-weight: 300;
+      color: $oc-gray-7;
+    }
+
+    .tags{
+      font-size: 0.85rem;
+      a{
+        color: rgb(245, 182, 152);
+        &:hover{
+          color: #DD5E89;
+          text-decoration: underline;
+        }
+      }
+      a+a{
+        margin-left: 0.52rem;
+      }
+    }
+
+    &:hover{
+      background: rgba($oc-orange-6, 0.05);
+    }
+  }
+
+  .post-item+.post-item{
+    border-top: 1px solid $oc-gray-3;
+  }
+}

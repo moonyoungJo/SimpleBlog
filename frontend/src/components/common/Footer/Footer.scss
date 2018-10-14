@@ -1,0 +1,28 @@
+@import 'src/styles/utils';
+
+.footer{
+  background: $oc-orange-0;
+  height: 10rem;
+
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .brand{
+    color: rgb(119, 119, 119);
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  .admin-login{
+    margin-top: 0.5rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: rgba(92, 92, 92, 0.8);
+    cursor: pointer;
+    &:hover{
+      color: rgba(44, 44, 44, 1);
+    }
+  }
+
+}
