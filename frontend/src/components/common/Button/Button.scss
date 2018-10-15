@@ -43,6 +43,18 @@
       border: 2px solid rgba(255, 255, 255, 0.85);
     }
   }
+  &.grayoutline{
+    border: 1px solid $oc-gray-3;
+    color: $oc-gray-7;
+    background: white;
+    &:hover{
+      background:$oc-gray-1;
+    }
+    &:active{
+      background:$oc-gray-5;
+      color: white;
+    }
+  }
 
   &:hover{
     @include material-shadow(2, 0.5);

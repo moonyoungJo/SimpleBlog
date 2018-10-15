@@ -40,33 +40,39 @@ exports.write = async (ctx) => {
     ctx.throw(e, 500);
   }
 }
-
+//목록 가져오기
 exports.list = async (ctx) => {
   const page = parseInt(ctx.query.page || 1, 10);
-  if(page<1){
+  if (page < 1) {
     ctx.status = 400;
     return;
   }
+  
+  const { tag } = ctx.query;
+  const query = tag ? {
+    tags: tag 
+  } : {};
 
-  try{
-    const posts = await Post.find()
-      .sort({_id:-1})
-      .limit(10)
-      .skip((page-1)*10)
+  try {
+    const posts = await Post.find(query)
+      .sort({ _id: -1 })
+      .limit(5)
+      .skip((page - 1) * 5)
       .lean()
       .exec();
-    
+    const postCount = await Post.countDocuments(query).exec();
     const limitBodyLength = post => ({
       ...post,
-      body: post.body.length < 100 ? post.body : `${post.body.slice(0, 100)}...`
+      body: post.body.length < 350 ? post.body : `${post.body.slice(0, 350)}...`
     });
     ctx.body = posts.map(limitBodyLength);
-    const postCount = await Post.count().exec();
-    ctx.set('Last-Page', Math.ceil(postCount/10));
-  }catch(e) {
-    ctx.throws(e, 500);
+
+    ctx.set('Last-Page', Math.ceil(postCount / 5));
+  } catch (e) {
+    ctx.throw(500, e);
   }
-}
+};
+
 exports.read = async (ctx) => {
   const {id} = ctx.params;
   try{
