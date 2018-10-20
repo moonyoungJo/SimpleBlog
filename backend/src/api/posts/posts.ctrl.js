@@ -2,6 +2,14 @@ const Post = require('models/post');
 const {ObjectId} = require('mongoose').Types;
 const Joi = require('joi');
 
+exports.checkLogin = (ctx, next) => {
+  if(!ctx.session.logged){
+    ctx.status = 401;
+    return null;
+  }
+  return next();
+}
+
 //존재하는 ID인지 검색
 exports.checkObjectId = (ctx, next) => {
   const {id} = ctx.params;
@@ -53,11 +61,12 @@ exports.list = async (ctx) => {
     tags: tag 
   } : {};
 
+  const postN = 3;
   try {
     const posts = await Post.find(query)
       .sort({ _id: -1 })
-      .limit(5)
-      .skip((page - 1) * 5)
+      .limit(postN)
+      .skip((page - 1) * postN)
       .lean()
       .exec();
     const postCount = await Post.countDocuments(query).exec();
@@ -67,7 +76,7 @@ exports.list = async (ctx) => {
     });
     ctx.body = posts.map(limitBodyLength);
 
-    ctx.set('Last-Page', Math.ceil(postCount / 5));
+    ctx.set('Last-Page', Math.ceil(postCount / postN));
   } catch (e) {
     ctx.throw(500, e);
   }
