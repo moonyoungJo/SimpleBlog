@@ -2,14 +2,16 @@
   db 연결 및 서버 실행
 */
 require('dotenv').config();
+const express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+const session = require('express-session');
 
-const Koa = require('koa');
-const Router = require('koa-router');
-const bodyParser = require('koa-bodyparser');
 const mongoose = require('mongoose');
-const session = require('koa-session');
 
-const api = require('./api');
+const authRouter = require('./routes/auth');
+const postRouter = require('./routes/posts');
 
 const {
   PORT: port = 4000,
@@ -25,22 +27,41 @@ mongoose.connect(mongoURI).then(() => {
   console.log(e);
 });
 
-const app = new Koa();
-const router = new Router();
+//server setting
+const app = new express();
+app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: signKey,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  }
+}));
 
-//api 등록
-//aession 등록
-const sessionConfig = {
-  maxAge:86400000,
-};
-app.use(session(sessionConfig, app));
-app.keys = [signKey];
+//router등록
+app.use('/api/auth', authRouter);
+app.use('/api/posts', postRouter);
 
-router.use('/api', api.routes());
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
 
-app.use(bodyParser());
-app.use(router.routes()).use(router.allowedMethods());
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // render the error page
+  res.status(err.status || 500);
+  res.end(err.message);
+});
 
 app.listen(port, () => {
   console.log('listening to port ', port);
