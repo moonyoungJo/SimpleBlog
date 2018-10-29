@@ -21,15 +21,18 @@ class EditorHeaderContainer extends Component {
     history.goBack();
   }
   handleSubmit = async () => {
-    const {title, markdown, tags, EditorActions, history, location} = this.props;
+    const {title, markdown, userid, username, tags, EditorActions, history, location} = this.props;
     const post = {
       title,
       body: markdown,
+      userid,
+      username,
       tags: tags === ''?[]:[...new Set(tags.split(',').map(tag => tag.trim()))]
     };
 
     try{
       const {id} = queryString.parse(location.search);
+ 
       if(id){
         await EditorActions.editPost({id, ...post});
         history.push(`/post/${id}`);
@@ -61,6 +64,8 @@ export default connect(
     title: state.editor.get('title'),
     markdown: state.editor.get('markdown'),
     tags:state.editor.get('tags'),
+    userid: state.base.get('userid'),
+    username: state.base.get('username'),
     postId: state.editor.get('postId')
   }),
   (dispatch) => ({

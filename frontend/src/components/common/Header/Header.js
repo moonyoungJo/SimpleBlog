@@ -7,15 +7,15 @@ import Button from 'components/common/Button';
 
 const cx = classNames.bind(styles);
 
-const Header = ({postId, onRemove, logged}) =>(
+const Header = ({postId, onRemove, userid, postUserId}) =>(
   <header className={cx('header')}>
     <div className={cx('header-content')}>
       <div className={cx('brand')}>
         <Link to="/">Simpleblog</Link>
       </div>
-      {logged && <div className={cx('right')}>
+      {userid && <div className={cx('right')}>
         {
-          postId && [
+          postId && postUserId === userid && [
             <Button key="edit" theme="outline" to={`/editor?id=${postId}`}>수정</Button>,
             <Button key="remove" theme="outline" onClick={onRemove}>삭제</Button>
           ]   

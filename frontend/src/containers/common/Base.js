@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import LoginModalContainer from 'containers/modal/LoginModalContainer';
+import JoinusModalContainer from 'containers/modal/JoinusModalContainer';
 import * as baseActions from 'store/modules/base';
 
 class Base extends Component {
@@ -17,15 +18,22 @@ class Base extends Component {
     this.initialize();
   }
   render() {
+    const {isLogin} = this.props;
     return(
       <div>
-        <LoginModalContainer />
+        {
+          isLogin
+          ?(<LoginModalContainer />)
+          :(<JoinusModalContainer />)
+        }
       </div>
     )
   }
 }
 export default connect(
-  null,
+  (state) => ({
+    isLogin: state.base.getIn(['modal', 'loginMode'])
+  }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch)
   })

@@ -13,14 +13,15 @@ class HeaderContainer extends Component {
   }
   render(){
     const {handleRemove} = this;
-    const {match, logged} = this.props;
+    const {match, userid, postUserId} = this.props;
     const {id} = match.params;
-
+    
     return(
       <Header
         postId={id}
         onRemove={handleRemove}
-        logged={logged}
+        userid={userid}
+        postUserId = {postUserId}
       />
     )
   }
@@ -28,7 +29,8 @@ class HeaderContainer extends Component {
 
 export default connect(
   (state) => ({
-    logged: state.base.get('logged')
+    userid: state.base.get('userid'),
+    postUserId: state.post.getIn(['post','userid'])
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch)

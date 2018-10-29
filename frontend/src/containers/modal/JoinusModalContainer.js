@@ -2,25 +2,19 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import LoginModal from 'components/modal/LoginModal';
+import JoinusModal from 'components/modal/JoinusModal';
 import * as baseActions from 'store/modules/base';
 
-class LoginModalContainer extends Component{
+class JoinusModalContainer extends Component{
   state={
     userid: '',
     password: '',
+    username: '',
+    email: '',
   }
-  handleLogin = async () => {
+  handleLogin = () => {
     const {BaseActions} = this.props;
-    const {userid, password} = this.state;
-
-    try{
-      await BaseActions.login(userid, password);
-      BaseActions.hideModal('login');
-      localStorage.logged = 'true';
-    }catch(e){
-      console.log(e);
-    }
+    BaseActions.changeModal();
   }
   handleCancel = () => {
     const {BaseActions} = this.props;
@@ -33,11 +27,19 @@ class LoginModalContainer extends Component{
   }
   handleKeyPress = (e) => {
     if(e.key === 'Enter')
-      this.handleLogin();
+      this.handleJoinUs();
   }
-  handleJoinUs = (e) => {
+  handleJoinUs = async (e) => {
     const {BaseActions} = this.props;
-    BaseActions.changeModal();
+    const {userid, password, username, email} = this.state;
+
+    try{
+      await BaseActions.joinus(userid, password, username, email);
+      BaseActions.hideModal('login');
+      localStorage.logged = 'true';
+    }catch(e){
+      console.log(e);
+    }
   }
   render() {
     const {handleLogin, handleCancel, handleChange, handleKeyPress, handleJoinUs} = this;
@@ -45,7 +47,7 @@ class LoginModalContainer extends Component{
     const {userid, password} = this.state;
 
     return(
-      <LoginModal
+      <JoinusModal
         onLogin={handleLogin}
         onCancel={handleCancel}
         onChange={handleChange}
@@ -62,9 +64,9 @@ class LoginModalContainer extends Component{
 export default connect(
   (state) => ({
     visible: state.base.getIn(['modal', 'login']),
-    error: state.base.getIn(['loginModal', 'error'])
+    error: state.base.getIn(['joinusModal', 'error'])
   }),
   (dispatch) => ({
     BaseActions: bindActionCreators(baseActions, dispatch),
   })
-)(LoginModalContainer);
+)(JoinusModalContainer);

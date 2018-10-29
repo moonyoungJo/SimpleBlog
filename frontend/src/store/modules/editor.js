@@ -19,6 +19,8 @@ const initialState = Map({
   title: '',
   markdown: '',
   tags: '',
+  userid: '',
+  username: '',
   postId: null
 });
 
@@ -38,10 +40,13 @@ export default handleActions({
   ...pender({
     type: GET_POST,
     onSuccess: (state, action) => {
-      const {title, tags, body} = action.payload.data;
+      const {title, tags, body, userid, username} = action.payload.data;
+
       return state.set('title', title)
                   .set('markdown', body)
-                  .set('tags', tags.join(', '));
+                  .set('tags', tags.join(', '))
+                  .set('userid', userid)
+                  .set('username', username);
     }
   })
 }, initialState);

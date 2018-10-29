@@ -11,7 +11,6 @@ class Post extends Component {
 
     try{
       await PostActions.getPost(id);
-      console.log('okok');
     }catch(e){
       console.log(e);
     }
@@ -25,10 +24,10 @@ class Post extends Component {
     if(loading) 
       return null;
     
-    const {title, body, publishedDate, tags} = post.toJS();
+    const {title, body, publishedDate, tags, userid, username} = post.toJS();
     return (
       <div>
-        <PostInfo title={title} publishedDate={publishedDate} tags={tags} />
+        <PostInfo title={title} publishedDate={publishedDate} tags={tags} userid={userid} username={username} />
         <PostBody body={body} />
       </div>
     )

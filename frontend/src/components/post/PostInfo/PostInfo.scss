@@ -39,6 +39,11 @@
       font-style: italic;
       font-size: 1.25rem;
     }
+    .userinfo{
+      text-align: right;
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+    }
   }
 
   @include media("<large"){

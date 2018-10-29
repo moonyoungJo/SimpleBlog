@@ -6,8 +6,10 @@ import * as api from 'lib/api';
 
 const SHOW_MODAL = 'base/SHOW_MODAL';
 const HIDE_MODAL = 'base/HIDE_MODAL';
+const CHANGE_MODAL = 'base/CHANGE_MODAL';
 const LOGIN = 'base/LOGIN';
 const LOGOUT = 'base/LOGOUT';
+const JOINUS = 'base/JOINUS';
 const CHECK_LOGIN = 'base/CHECK_LOGIN';
 const CHANGE_PASSWORD_INPUT = 'base/CHANGE_PASSWORD_INPUT';
 const INITIALIZE_LOGIN_MODAL = 'base/INITIALIZE_LOGIN_MODAL';
@@ -15,8 +17,10 @@ const TEMP_LOGIN = 'base/TEMP_LOGIN';
 
 export const showModal = createAction(SHOW_MODAL);
 export const hideModal = createAction(HIDE_MODAL);
+export const changeModal = createAction(CHANGE_MODAL);
 export const login = createAction(LOGIN, api.login);
 export const logout = createAction(LOGOUT, api.logout);
+export const joinus = createAction(JOINUS, api.joinus);
 export const checkLogin = createAction(CHECK_LOGIN, api.checkLogin);
 export const changePasswordInput = createAction(CHANGE_PASSWORD_INPUT);
 export const initializeLoginModal = createAction(INITIALIZE_LOGIN_MODAL);
@@ -25,13 +29,18 @@ export const tempLogin = createAction(TEMP_LOGIN);
 const initialState = Map({
   modal: Map({
     remove: false,
-    login: false
+    login: false,
+    loginMode: true,
   }),
   loginModal: Map({
-    password: '',
     error: false
   }),
-  logged: false
+  joinusModal: Map({
+    error: false
+  }),
+  logged: false,
+  userid: null,
+  username: null,
 });
 
 export default handleActions({
@@ -43,21 +52,41 @@ export default handleActions({
     const {payload:modalName} = action;
     return state.setIn(['modal', modalName], false);
   },
+  [CHANGE_MODAL]: (state, action) => {
+    const before = state.getIn(['modal', 'loginMode']);
+    return state.setIn(['modal', 'loginMode'], !before);
+  },
   ...pender({
     type: LOGIN,
     onSuccess: (state, action) => {
-      return state.set('logged', true);
+      const {userid, username} = action.payload.data;
+      return initialState.set('logged', true)
+                  .set('userid', userid)
+                  .set('username', username);
     },
     onError: (state, action) => {
-      return state.setIn(['loginModal', 'error'], true)
-                  .setIn(['loginModal', 'password'], '');
+      return state.setIn(['loginModal', 'error'], true);
+    }
+  }),
+  ...pender({
+    type: JOINUS,
+    onSuccess: (state, action) => {
+      const {userid, username} = action.payload.data;
+      return initialState.set('logged', true)
+              .set('userid', userid)
+              .set('username', username);
+    },
+    onError: (state, action) => {
+      return state.setIn(['joinusModal', 'error'], true);
     }
   }),
   ...pender({
     type: CHECK_LOGIN,
     onSuccess: (state, action) => {
-      const {logged} = action.payload.data;
-      return state.set('logged', logged);
+      const {logged, userid, username} = action.payload.data;
+      return state.set('logged', logged)
+                  .set('userid', userid)
+                  .set('username', username);
     }
   }),
   [CHANGE_PASSWORD_INPUT]: (state, action) => {
